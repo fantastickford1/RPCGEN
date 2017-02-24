@@ -1,22 +1,26 @@
 #include <stdio.h>
+#include <rpc/rpc.h>
 #include "msg.h"
 
-int *
-printmessage_1(msg, req)
-	char **msg;
-	struct svc_req *req;
+int * printmessage_1 (char **msg, CLIENT *clnt)
 {
   static int result;
-  FILE *f;
 
-  f = fopen("/dev/cosole","w");
-  if (f = (FILE *)NULL) {
-    result = 0;
-    return (&result);
-  }
-  fprintf(f, "%s\n", *msg );
-  fclose(f);
+  printf("%s\n", *msg );
+
   result = 1;
-  return (&result);
 
+  return(&result);
+}
+
+
+int * printmessage_1_svc(char **msg, struct svc_req *req)
+{
+  static int result;
+
+  printf("%s\n", *msg );
+
+  result = 1;
+
+  return(&result);
 }

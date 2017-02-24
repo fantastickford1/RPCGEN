@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 
-#define MESSAGEPROG 0x20000001
-#define PRINTMESSAGEVERS 1
+#define MESSAGEPROG 0x20000099
+#define MESSAGEVERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define PRINTMESSAGE 1

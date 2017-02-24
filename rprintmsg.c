@@ -1,42 +1,41 @@
 #include <stdio.h>
+#include <rpc/rpc.h>
 #include "msg.h"
 
 int main(int argc, char const *argv[]) {
-  CLIENT *clnt;
+
+  CLIENT *cl;
   int *result;
   char *server;
   char *message;
 
   if (argc != 3) {
-    fprintf(stderr, "usage: %s host message \n", argv[0] );
-    exit(1);
+    fprintf(stderr, "usage %s host message\n", argv[0] );
   }
+
   server = argv[1];
   message = argv[2];
 
-  //manejador de cliente
-  clnt = clnt_create(server, MESSAGEPROG,PRINTMESSAGEVERS, "visible"); //RPC rutina
+  cl = clnt_create(server, MESSAGEPROG, MESSAGEVERS, "tcp");
 
-  if (clnt == (CLIENT *) NULL) {
-    //NO SE PUDO CONECTAR AL SERVER
-    clnt_pcreateerror(server);
+  if ( cl == NULL) {
+    clnt_pcreateerror( server );
     exit(1);
   }
-  //Llamada del proceso remoto en el servidor
-  result = printmessage_1(&message, clnt);
-  if (result == (int *)NULL) {
-    //un error ocurrio al momento de llamar al server
-    clnt_perror(clnt,server);
+
+  result = printmessage_1(&message, cl);
+
+  if (result == NULL) {
+    clnt_perror(cl, server);
     exit(1);
   }
 
   if (*result == 0) {
-    fprintf(stderr, "%s: no se pudo imprimir el mensaje\n", argv[0] );
+    fprintf(stderr, "%s : %s couldn't print your message\n", argv[0], server );
     exit(1);
   }
 
-  printf("Mensaje entregado a %s\n", server );
-  clnt_destroy( clnt );
+  printf("Message delivered to %s!\n", server );
   exit(0);
-  return 0;
+
 }
